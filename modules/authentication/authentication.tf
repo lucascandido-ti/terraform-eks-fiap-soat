@@ -55,6 +55,7 @@ resource "aws_api_gateway_resource" "api_gateway_resource" {
   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
   parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
   path_part   = var.resource
+  depends_on  = [aws_api_gateway_rest_api.api_gateway]
 }
 
 resource "aws_api_gateway_method" "api_gateway_method" {
@@ -63,6 +64,10 @@ resource "aws_api_gateway_method" "api_gateway_method" {
   http_method   = "GET"
   authorization = "COGNITO_USER_POOLS"
   authorizer_id = aws_api_gateway_authorizer.cognito_authorizer.id
+  depends_on = [
+    aws_api_gateway_rest_api.api_gateway,
+    aws_api_gateway_resource.api_gateway_resource
+  ]
 }
 
 resource "aws_api_gateway_integration" "api_gateway_integration" {
@@ -71,6 +76,11 @@ resource "aws_api_gateway_integration" "api_gateway_integration" {
   http_method = aws_api_gateway_method.api_gateway_method.http_method
   type        = "AWS_PROXY"
   uri         = var.url_integration # Substitua pela URL da sua aplicação
+  depends_on = [
+    aws_api_gateway_method.api_gateway_method,
+    aws_api_gateway_resource.api_gateway_resource,
+    aws_api_gateway_rest_api.api_gateway
+  ]
 }
 
 resource "aws_api_gateway_authorizer" "cognito_authorizer" {
@@ -79,6 +89,11 @@ resource "aws_api_gateway_authorizer" "cognito_authorizer" {
   identity_source = "method.request.header.Authorization"
   provider_arns   = [aws_cognito_user_pool.user_pool.arn]
   type            = "COGNITO_USER_POOLS"
+
+  depends_on = [
+    aws_api_gateway_rest_api.api_gateway,
+    aws_cognito_user_pool.user_pool
+  ]
 }
 
 # "myresource"
