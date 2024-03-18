@@ -89,7 +89,7 @@ resource "aws_api_gateway_integration" "api_gateway_integration" {
   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
   resource_id = aws_api_gateway_resource.api_gateway_resource.id
   http_method = aws_api_gateway_method.api_gateway_method.http_method
-  type        = "HTTP"
+  type        = "AWS_PROXY"
   uri         = var.url_integration # Substitua pela URL da sua aplicação
   depends_on = [
     aws_api_gateway_method.api_gateway_method,
@@ -97,7 +97,6 @@ resource "aws_api_gateway_integration" "api_gateway_integration" {
     aws_api_gateway_rest_api.api_gateway
   ]
 }
-
 
 # "myresource"
 # "CognitoAuthorizer"
