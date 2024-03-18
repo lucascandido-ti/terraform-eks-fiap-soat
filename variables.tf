@@ -3,8 +3,11 @@ variable "aws_region" {
 }
 
 locals {
-  cluster_name = "tech-challenge-cluster"
-  vpc_name     = "tech-challenge-vpc"
+  cluster_name    = "tech-challenge-cluster"
+  node_group_name = "tech-challenge-cluster-worker"
+  vpc_name        = "tech-challenge-vpc"
+  k8s_name_db     = "tech-challenge-kubernetes-db"
+  k8s_name_api    = "tech-challenge-kubernetes-db"
   common_tags = {
     terraform = var.terraform
   }
