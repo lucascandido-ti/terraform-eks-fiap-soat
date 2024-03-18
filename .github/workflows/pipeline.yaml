@@ -35,7 +35,7 @@ jobs:
     needs: init-and-validate
     runs-on: ubuntu-latest
     env:
-      AWS_REGION: ${{ env.AWS_REGION }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
     steps:
     - uses: actions/checkout@v3
 
