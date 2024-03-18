@@ -8,6 +8,9 @@ on:
   pull_request:
   
 env:
+  AWS_ACCESS_KEY: "${{ secrets.AWS_ACCESS_KEY }}"
+  AWS_SECRET_KEY: "${{ secrets.AWS_SECRET_KEY }}"
+  AWS_REGION: "${{ secrets.AWS_REGION }}"
   TF_CLOUD_ORGANIZATION: "TC_G22_SOAT"
   TF_API_TOKEN: "${{ secrets.TF_CLOUD_TOKEN }}"
   TF_WORKSPACE: "cluster-aws-eks"
