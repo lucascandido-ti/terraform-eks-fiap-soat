@@ -9,7 +9,7 @@ on:
   
 env:
   TF_CLOUD_ORGANIZATION: "TC_G22_SOAT"
-  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
+  TF_API_TOKEN: "${{ secrets.TF_CLOUD_TOKEN }}"
   TF_WORKSPACE: "cluster-iac"
   CONFIG_DIRECTORY: "./"
 
