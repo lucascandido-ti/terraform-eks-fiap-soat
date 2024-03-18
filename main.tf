@@ -11,6 +11,8 @@ module "cluster_eks_k8s" {
   ami_type            = var.ami_type
   tags                = local.common_tags
 
+  cluster_token = data.aws_eks_cluster_auth.cluster.token
+
   k8s_name_db  = local.k8s_name_db
   k8s_name_api = local.k8s_name_api
 
