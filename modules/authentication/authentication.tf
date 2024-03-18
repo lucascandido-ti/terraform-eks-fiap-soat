@@ -51,6 +51,20 @@ resource "aws_api_gateway_rest_api" "api_gateway" {
   description = "API protegida via Cognito"
 }
 
+
+resource "aws_api_gateway_authorizer" "cognito_authorizer" {
+  name            = var.authorizer_name
+  rest_api_id     = aws_api_gateway_rest_api.api_gateway.id
+  identity_source = "method.request.header.Authorization"
+  provider_arns   = [aws_cognito_user_pool.user_pool.arn]
+  type            = "COGNITO_USER_POOLS"
+
+  depends_on = [
+    aws_api_gateway_rest_api.api_gateway,
+    aws_cognito_user_pool.user_pool
+  ]
+}
+
 resource "aws_api_gateway_resource" "api_gateway_resource" {
   rest_api_id = aws_api_gateway_rest_api.api_gateway.id
   parent_id   = aws_api_gateway_rest_api.api_gateway.root_resource_id
@@ -66,7 +80,8 @@ resource "aws_api_gateway_method" "api_gateway_method" {
   authorizer_id = aws_api_gateway_authorizer.cognito_authorizer.id
   depends_on = [
     aws_api_gateway_rest_api.api_gateway,
-    aws_api_gateway_resource.api_gateway_resource
+    aws_api_gateway_resource.api_gateway_resource,
+    aws_api_gateway_authorizer.cognito_authorizer
   ]
 }
 
@@ -80,19 +95,6 @@ resource "aws_api_gateway_integration" "api_gateway_integration" {
     aws_api_gateway_method.api_gateway_method,
     aws_api_gateway_resource.api_gateway_resource,
     aws_api_gateway_rest_api.api_gateway
-  ]
-}
-
-resource "aws_api_gateway_authorizer" "cognito_authorizer" {
-  name            = var.authorizer_name
-  rest_api_id     = aws_api_gateway_rest_api.api_gateway.id
-  identity_source = "method.request.header.Authorization"
-  provider_arns   = [aws_cognito_user_pool.user_pool.arn]
-  type            = "COGNITO_USER_POOLS"
-
-  depends_on = [
-    aws_api_gateway_rest_api.api_gateway,
-    aws_cognito_user_pool.user_pool
   ]
 }
 
