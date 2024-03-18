@@ -12,7 +12,7 @@ on:
 env:
   TF_CLOUD_ORGANIZATION: "TC_G22_SOAT"
   TF_API_TOKEN: "${{ secrets.TF_CLOUD_TOKEN }}"
-  TF_WORKSPACE: "cluster-iac"
+  TF_WORKSPACE: "cluster-aws-eks"
   CONFIG_DIRECTORY: "./"
 
 jobs:
