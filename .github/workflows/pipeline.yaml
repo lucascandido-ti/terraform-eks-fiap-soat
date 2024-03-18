@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  init-and-validate:
+  terraform-plan:
     runs-on: ubuntu-latest
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
@@ -31,54 +31,23 @@ jobs:
     - name: Terraform validate
       run: terraform validate
 
-    - name: Archive Terraform Initialization Data
-      uses: actions/upload-artifact@v2
-      with:
-        name: terraform-data
-        path: |
-          .terraform/**
-          .terraform.lock.hcl
-          .terraform.tfstate
-          .terraform.tfstate.backup
-
-  plan:
-    needs: init-and-validate
-    runs-on: ubuntu-latest
-    env:
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Download Terraform Initialization Data
-      uses: actions/download-artifact@v2
-      with:
-        name: terraform-data
-        path: .terraform
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
     - name: Terraform Plan
-      run: terraform plan
-      
-    - name: Archive Terraform Initialization Data
+      run: terraform plan -out=plan.out
+
+    - name: Archive Terraform Plan
       uses: actions/upload-artifact@v2
       with:
-        name: terraform-data
-        path: |
-          .terraform/**
-          .terraform.lock.hcl
-          .terraform.tfstate
-          .terraform.tfstate.backup
+        name: terraform-plan
+        path: plan.out
+   
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
   apply:
-    needs: plan
+    needs: terraform-plan
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     env:
@@ -89,8 +58,8 @@ jobs:
     - name: Download Terraform Initialization Data
       uses: actions/download-artifact@v2
       with:
-        name: terraform-data
-        path: .terraform
+        name: terraform-plan
+        path: plan.out
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -102,5 +71,8 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
 
+    - name: Terraform Show
+      run: terraform show plan.out
+    
     # - name: Terraform Apply
     #   run: terraform apply -auto-approve
