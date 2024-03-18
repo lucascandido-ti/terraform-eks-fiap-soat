@@ -1,16 +1,16 @@
 output "cluster_id" {
   description = "EKS cluster ID."
-  value       = aws_eks_cluster.cluster_eks.cluster_id
+  value       = module.eks.cluster_id
 }
 
 output "cluster_endpoint" {
   description = "Endpoint for EKS control plane."
-  value       = aws_eks_cluster.cluster_eks.endpoint
+  value       = module.eks.cluster_endpoint
 }
 
 output "cluster_certificate_authority" {
   description = "value of the cluster's certificate authority."
-  value       = aws_eks_cluster.cluster_eks.certificate_authority
+  value       = module.eks.cluster_certificate_authority_data
 }
 
 output "cluster_name" {
