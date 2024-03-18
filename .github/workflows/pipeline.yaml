@@ -31,6 +31,12 @@ jobs:
     - name: Terraform validate
       run: terraform validate
 
+    - name: Archive Terraform Initialization Data
+      uses: actions/upload-artifact@v2
+      with:
+        name: terraform-data
+        path: .terraform/**
+
   plan:
     needs: init-and-validate
     runs-on: ubuntu-latest
@@ -38,6 +44,12 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
     steps:
     - uses: actions/checkout@v3
+
+    - name: Download Terraform Initialization Data
+      uses: actions/download-artifact@v2
+      with:
+        name: terraform-data
+        path: .terraform
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -51,6 +63,12 @@ jobs:
 
     - name: Terraform Plan
       run: terraform plan
+      
+    - name: Archive Terraform Initialization Data
+      uses: actions/upload-artifact@v2
+      with:
+        name: terraform-data
+        path: .terraform/**
 
   apply:
     needs: plan
@@ -60,6 +78,12 @@ jobs:
       AWS_REGION: ${{ secrets.AWS_REGION }}
     steps:
     - uses: actions/checkout@v3
+
+    - name: Download Terraform Initialization Data
+      uses: actions/download-artifact@v2
+      with:
+        name: terraform-data
+        path: .terraform
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
