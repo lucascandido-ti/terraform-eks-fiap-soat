@@ -40,3 +40,25 @@ module "security_group" {
   eks_cluster_sg_description = "Grupo de seguranca do cluster"
   vpc_id                     = module.vpc.vpc_id
 }
+
+module "authentication" {
+  source     = "./modules/authentication"
+  aws_region = var.aws_region
+
+  api_name = var.api_name
+
+  user_pool_client_name = var.user_pool_client_name
+  user_pool_name        = var.user_pool_name
+
+  minimum_length_password = var.minimum_length_password
+
+  url_integration = var.url_integration
+  callback_urls   = var.callback_urls
+  logout_urls     = var.logout_urls
+
+  authorizer_name     = var.authorizer_name
+  allowed_oauth_flows = var.allowed_oauth_flows
+  explicit_auth_flows = var.explicit_auth_flows
+
+  resource = var.resource
+}
