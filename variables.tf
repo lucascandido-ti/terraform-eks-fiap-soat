@@ -39,7 +39,6 @@ variable "desired_nodes" {
   default = 3
 }
 
-#tags
 variable "terraform" {
   default = "True"
 }
