@@ -149,6 +149,7 @@ resource "helm_release" "database" {
   repository = var.helm_repo
   chart      = var.helm_chart_db
   version    = var.helm_chart_version_db
+  namespace  = "kube-system"
 
   depends_on = [module.eks]
 }
@@ -158,7 +159,9 @@ resource "helm_release" "application" {
   repository = var.helm_repo
   chart      = var.helm_chart_api
   version    = var.helm_chart_version_api
+  namespace  = "kube-system"
 
+  timeout    = 600
   depends_on = [module.eks, helm_release.database]
 }
 

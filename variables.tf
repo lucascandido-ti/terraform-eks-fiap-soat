@@ -21,6 +21,11 @@ locals {
     version    = "0.1.0"
   }
 
+  security_groups = {
+    balancers_sg_name = "sg-balancer-cluster"
+    balancers_sg_description = "Allow traffic"
+  }
+
   common_tags = {
     terraform = var.terraform
   }
@@ -55,13 +60,17 @@ variable "user_pool_client_name" {
   default = "user_pool_client_tech-challenge"
 }
 
+variable "user_pool_domain" {
+  default = "user-tech-challenge"
+}
+
 variable "minimum_length_password" {
   default = 8
 }
 
 variable "explicit_auth_flows" {
   type    = list(string)
-  default = ["ALLOW_CUSTOM_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
+  default = ["ALLOW_USER_SRP_AUTH", "ALLOW_REFRESH_TOKEN_AUTH"]
 }
 
 variable "allowed_oauth_flows" {
@@ -92,12 +101,12 @@ variable "api_name" {
 
 variable "url_integration" {
   type    = string
-  default = "http://example.com"
+  default = "https://example.com"
 }
 
 variable "resource" {
   type    = string
-  default = "resource_provider"
+  default = "{proxy+}"
 }
 
 variable "authorizer_name" {
@@ -105,3 +114,16 @@ variable "authorizer_name" {
   default = "CognitoAuthorizer"
 }
 
+variable "lb-name" {
+  default = "tech-challenge-lb"
+}
+
+variable "sg-balancer" {
+  default = "balancers-security-group"
+}
+variable "sg-cluster" {
+  default = "cluster-security-group"
+}
+variable "vpc_link_name" {
+  default = "vp_link_app"
+}
